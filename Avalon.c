@@ -9,6 +9,7 @@ int main(int argc, char *argv[])
 {
 	char *p;
 	int cpuCount = get_nprocs();
+	int processCreatedCount = 0;
 	int a, i, processCount;
 	int *processes;
 	errno = 0;
@@ -25,8 +26,8 @@ int main(int argc, char *argv[])
 		processCount = cpuCount;
 	}
 
-	printf("Anzahl der Prozessoren: %d\n", cpuCount);
-	printf("Anzahl der Prozesse: %d\n", processCount);
+	printf("Anzahl der logischen Prozessoren: %d\n", cpuCount);
+	printf("Anzahl der zu startenden Prozesse: %d\n", processCount);
 	processes = malloc(processCount * sizeof *processes);
 
 	for (i = 0; i < processCount; i++)
@@ -53,15 +54,24 @@ int main(int argc, char *argv[])
 			}
 			exit(0);
 		}
+		processCreatedCount++;
 	}
 
 	if (errno == 0)
 	{
-		printf("Prozesse wurden gestartet. Beenden mit Tastendruck\n");
+		if (processCreatedCount == 1)
+		{
+			printf("Der Prozess wurde gestartet.");
+		} else {
+			printf("Die Prozesse wurden gestartet.");
+		}
+		printf(" Beenden mit Tastendruck\n");
 		getchar();
+	} else {
+		errno = 0;
 	}
 
-	for (i = 0; i < processCount; i++)
+	for (i = 0; i < processCreatedCount; i++)
 	{
 		kill(processes[i], SIGKILL);
 	}
@@ -70,10 +80,10 @@ int main(int argc, char *argv[])
 
 	if (errno != 0)
 	{
+		printf("Fehler: Das Beenden von mindestens einem Prozess hat nicht funktioniert!\n");
 		return 1;
 	}
 
 	printf("Fertig\n");
 	return 0;
 }
-
