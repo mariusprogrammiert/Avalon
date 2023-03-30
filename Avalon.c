@@ -28,7 +28,13 @@ int main(int argc, char *argv[])
 
 	printf("Anzahl der logischen Prozessoren: %d\n", cpuCount);
 	printf("Anzahl der zu startenden Prozesse: %d\n", processCount);
+
 	processes = malloc(processCount * sizeof *processes);
+	if (processes == NULL)
+	{
+		printf("Fehler: Arbeitsspeicher konnte nicht angefordert werden!\n");
+		return 1;
+	}
 
 	for (i = 0; i < processCount; i++)
 	{
