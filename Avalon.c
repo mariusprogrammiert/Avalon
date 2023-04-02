@@ -43,7 +43,6 @@ int main(int argc, char *argv[])
 		if (processes[i] == -1)
 		{
 			printf("Fehler: Neuer Prozess konnte nicht erzeugt werden!\n");
-			processCount = i;
 			break;
 		}
 
